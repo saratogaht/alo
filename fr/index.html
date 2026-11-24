@@ -86,8 +86,8 @@ section.block{padding-top:80px;padding-bottom:80px}
 .mode .sw{flex:none;width:14px;height:14px;margin-top:5px;border-radius:50%}
 .mode b{display:block;font-size:18px;font-weight:500}
 .mode span.d{display:block;margin-top:4px;font-size:15px;line-height:1.45;color:#a9b4bf;font-weight:300}
-.swatches{display:none;flex-wrap:wrap;gap:10px;padding:6px 4px 0}
-.swatches.on{display:flex}
+.swatches{display:none;grid-template-columns:repeat(6,44px);gap:12px 10px;padding:6px 4px 0}
+.swatches.on{display:grid}
 .swatches button{width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.15);cursor:pointer}
 .swatches button[aria-pressed="true"]{border-color:#fff}
 /* sc360 */
@@ -402,7 +402,6 @@ const TO = 'patrizio@saratogadental.it';
   const sw=document.createElement('div');sw.className='swatches';sw.setAttribute('role','group');sw.setAttribute('aria-label',I18N.pickColor);
   const addSw=(name,val)=>{const b=document.createElement('button');b.type='button';b.dataset.hex=val;b.setAttribute('aria-label',name);b.title=name;b.style.background=swBg(val);b.style.boxShadow=isFlag(val)?'0 0 10px rgba(255,255,255,.3)':'0 0 14px '+val;b.addEventListener('click',()=>{custom=val;render();});sw.appendChild(b);};
   I18N.swatches.forEach(([name,hex])=>addSw(name,hex));
-  const sep=document.createElement('span');sep.setAttribute('aria-hidden','true');sep.style.cssText='width:1px;height:32px;align-self:center;background:rgba(255,255,255,.18);margin:0 4px';sw.appendChild(sep);
   I18N.flags.forEach(([code,name])=>addSw(name,'flag:'+code));
   modesEl.appendChild(sw);
   render();
