@@ -148,8 +148,8 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 .sent .w{white-space:nowrap}
 .sent .ch{color:rgba(244,247,250,.10);transition:color .18s ease,text-shadow .18s ease}
 .sent .ch.on{color:var(--c);text-shadow:0 0 6px var(--g),0 0 18px var(--g)}
-@keyframes ledblink{0%,100%{opacity:1}15%{opacity:.15}30%{opacity:1}45%{opacity:.15}60%{opacity:1}}
-.sent.blink .ch{animation:ledblink 1s ease-in-out 1}
+@keyframes ledblink{0%,100%{opacity:1}45%{opacity:.15}}
+.sent.blink .ch{animation:ledblink .6s ease-in-out 1}
 .sent.done .ch.on{text-shadow:0 0 4px var(--g),0 0 12px var(--g)}
 @media (prefers-reduced-motion:reduce){.sent.blink .ch{animation:none}.calm,.pulse,.breathe,.led-line,.dot,.rise{animation:none}}
 </style>
@@ -157,7 +157,7 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 <body>
 <header>
 <div class="wrap nav">
-<a href="../"><img src="../assets/logo_saratoga.png" alt="Saratoga — 50 years, human centered innovation" style="height:34px;width:auto;display:block"></a>
+<a href="https://www.saratogadental.it" target="_blank" rel="noopener" aria-label="Saratoga — www.saratogadental.it"><img src="../assets/logo_saratoga.png" alt="Saratoga — 50 years, human centered innovation" style="height:44px;width:auto;display:block"></a>
 <nav aria-label="Sections">
 <a class="navlink" href="#luce">La lumière</a>
 <a class="navlink" href="#sc360">SmartCabinet360</a>
@@ -340,7 +340,7 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 </main>
 
 <footer><div class="wrap">
-<img src="../assets/logo_saratoga.png" alt="Saratoga" style="height:28px;width:auto">
+<a href="https://www.saratogadental.it" target="_blank" rel="noopener" aria-label="Saratoga — www.saratogadental.it"><img src="../assets/logo_saratoga.png" alt="Saratoga" style="height:36px;width:auto;display:block"></a>
 <p>L’avenir, c’est alō. · <a href="https://www.saratogadental.it">saratogadental.it</a></p>
 </div></footer>
 
@@ -431,7 +431,7 @@ const TO = 'patrizio@saratogadental.it';
       if(reduce){sents.forEach(se=>{se.classList.add('done');se.querySelectorAll('.ch').forEach(c=>c.classList.add('on'));});running=false;return;}
       for(const se of sents){
         for(const c of se.querySelectorAll('.ch')){c.classList.add('on');await sleep(/[.,;:]/.test(c.textContent)?160:34);}
-        se.classList.add('blink');await sleep(1000);se.classList.remove('blink');se.classList.add('done');await sleep(250);
+        se.classList.add('blink');await sleep(600);se.classList.remove('blink');se.classList.add('done');await sleep(250);
       }
       running=false;
     }
