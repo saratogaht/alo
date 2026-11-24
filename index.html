@@ -151,6 +151,30 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 @keyframes ledblink{0%,100%{opacity:1}45%{opacity:.15}}
 
 .sent.done .ch.on{text-shadow:0 0 4px var(--g),0 0 12px var(--g)}
+/* interactions */
+.ix{display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start;margin-top:56px}
+.ix-stage{flex:999 1 560px;min-width:0;position:relative;border-radius:28px;background:#0b0f14;border:1px solid rgba(255,255,255,.08);padding:28px 24px 84px}
+.ix-stage canvas{display:block;width:100%;height:auto}
+.ix-controls{flex:1 1 340px;min-width:0}
+.ix-h{margin:0 0 14px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#c9d2db;font-weight:500}
+.ix-group{margin-bottom:16px}
+.ix-l{display:block;font-size:14px;color:#8a96a3;margin-bottom:8px}
+.ix-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ix-chip{min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.03);color:#f4f7fa;font:inherit;font-size:14px;cursor:pointer}
+.ix-chip[aria-pressed="true"]{border-color:#5fd4ff;background:rgba(95,212,255,.14)}
+.ix-sw{display:grid;grid-template-columns:repeat(6,40px);gap:10px}
+.ix-sw button{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.15);cursor:pointer}
+.ix-sw button[aria-pressed="true"]{border-color:#fff}
+.ix-presets{display:flex;flex-direction:column;gap:8px}
+.ix-preset{text-align:left;padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);color:#f4f7fa;font:inherit;font-size:15px;cursor:pointer;display:flex;gap:12px;align-items:center}
+.ix-preset[aria-pressed="true"]{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.35)}
+.ix-preset .pdot{flex:none;width:10px;height:10px;border-radius:50%}
+.ix-form-box{margin-top:56px;border-radius:28px;padding:clamp(24px,4vw,48px);background:#0a0e13;border:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;gap:40px}
+.ix-form-intro{flex:1 1 300px;min-width:0}
+.ix-form-intro h3{margin:0;font-weight:200;font-size:clamp(28px,3vw,40px);letter-spacing:-.02em;line-height:1.1}
+.ix-form-wrap{flex:999 1 480px;min-width:0}
+.ix-form-wrap form{display:flex;flex-direction:column;gap:18px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 @media (prefers-reduced-motion:reduce){.sent.blink .ch{animation:none}.calm,.pulse,.breathe,.led-line,.dot,.rise{animation:none}}
 </style>
 </head>
@@ -160,6 +184,7 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 <a href="https://www.saratogadental.it" target="_blank" rel="noopener" aria-label="Saratoga — www.saratogadental.it"><img src="assets/logo_saratoga.png" alt="Saratoga — 50 years, human centered innovation" style="height:53px;width:auto;display:block"></a>
 <nav aria-label="Sezioni">
 <a class="navlink" href="#luce">La luce</a>
+<a class="navlink" href="#interactions">Interactions</a>
 <a class="navlink" href="#sc360">SmartCabinet360</a>
 <a class="navlink" href="#design">Design</a>
 <a class="navlink" href="#video">Video</a>
@@ -225,6 +250,57 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 </div>
 </section>
 
+<section id="interactions" class="wrap block">
+<p class="kicker">Interactions</p>
+<h2>Ogni messaggio ha la sua luce.</h2>
+<p class="lead">Con le Interactions ogni evento della clinica può avere una sua firma luminosa: un colore o una scala cromatica, una direzione, un ritmo. Il team la riconosce al primo sguardo, senza guardare uno schermo e senza interrompere il lavoro.</p>
+<div class="ix">
+<div class="ix-stage">
+<canvas id="ixCanvas" width="1280" height="470" role="img" aria-label="Anteprima animata della Interaction sulle bande LED del mobile alō"></canvas>
+<div class="status"><span class="dot" id="ixDot"></span><span id="ixLabel"></span></div>
+</div>
+<div class="ix-controls">
+<p class="ix-h">Crea la tua Interaction</p>
+<div class="ix-group" role="group" aria-label="Movimento"><span class="ix-l">Movimento</span><div class="ix-chips" id="ixMoves"></div></div>
+<div class="ix-group" role="group" aria-label="Velocità"><span class="ix-l">Velocità</span><div class="ix-chips" id="ixSpeeds"></div></div>
+<div class="ix-group" role="group" aria-label="Colore"><span class="ix-l">Colore</span><div class="ix-sw" id="ixColors"></div></div>
+<p class="ix-h" style="margin-top:22px">Prova un esempio</p>
+<div class="ix-presets" id="ixPresets"></div>
+</div>
+</div>
+
+<div class="ix-form-box">
+<div class="ix-form-intro">
+<h3>Quale messaggio vorresti che alō ti comunicasse?</h3>
+<p class="lead" style="font-size:17px">Raccontaci un momento della tua giornata clinica che meriterebbe un segnale luminoso. Le proposte migliori saranno integrate nello sviluppo delle funzioni AI di alō.</p>
+</div>
+<div class="ix-form-wrap">
+<form id="ixForm" novalidate aria-label="Quale messaggio vorresti che alō ti comunicasse?">
+<div class="f"><label for="ix-msg">Il messaggio *</label><textarea id="ix-msg" class="field" rows="2" placeholder="es. Paziente in attesa da oltre 10 minuti" style="resize:vertical"></textarea></div>
+<div class="f"><label for="ix-light">La luce che immagini</label><input id="ix-light" class="field" type="text"></div>
+<div class="fields">
+<div class="f"><label for="ix-name">Nome e cognome *</label><input id="ix-name" class="field" type="text" autocomplete="name"></div>
+<div class="f"><label for="ix-email">Email *</label><input id="ix-email" class="field" type="email" autocomplete="email"></div>
+<div class="f"><label for="ix-role">Ruolo / Studio</label><input id="ix-role" class="field" type="text" autocomplete="organization"></div>
+</div>
+<div class="hp" aria-hidden="true"><label for="ix-website">Website</label><input id="ix-website" type="text" tabindex="-1" autocomplete="off"></div>
+<label class="consent" for="ix-privacy"><input id="ix-privacy" type="checkbox">Acconsento al trattamento dei dati per essere ricontattato da Saratoga in merito alla mia proposta. *</label>
+<p class="err" id="ixErr" role="alert" hidden></p>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px">
+<button type="submit" class="btn btn-light" id="ixSubmit">Invia la mia idea</button>
+<span style="font-size:13px;color:#8a96a3">* campi obbligatori</span>
+</div>
+</form>
+<div class="thanks" id="ixThanks" role="status">
+<div class="led-line" style="width:120px"></div>
+<p class="t" id="ixThanksTitle"></p>
+<p>La tua idea è arrivata al team alō. Ti terremo aggiornato sugli sviluppi delle Interactions.</p>
+<button type="button" class="btn btn-ghost" id="ixAgain" style="align-self:flex-start;min-height:46px;font-size:15px">Invia un’altra idea</button>
+</div>
+</div>
+</div>
+</section>
+
 <section id="sc360" class="sc" aria-label="SmartCabinet360">
 <video class="bgvid" src="assets/sc360_bg.mp4" autoplay muted loop playsinline aria-hidden="true"></video>
 <div class="shade" aria-hidden="true"></div>
@@ -278,7 +354,7 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 <p class="kicker">HUMAN CENTERED INNOVATION</p>
 <h2 style="max-width:960px;font-size:clamp(30px,3.6vw,52px)">Non seguiamo le tendenze del settore. Le anticipiamo.</h2>
 <div class="timeline">
-<div><b>2005</b><span>Design con Pininfarina</span></div>
+<div><b>2005</b><span>Linea PF, design by Pininfarina</span></div>
 <div><b>2008</b><span>Simulatore Smily per la formazione</span></div>
 <div><b>2010</b><span>S-Tray · ergonomia a 360°</span></div>
 <div><b>2022</b><span>ViQi · robotica collaborativa in studio</span></div>
@@ -319,6 +395,7 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 <div class="f"><label for="f-data">Periodo preferito</label><input id="f-data" name="data" class="field" type="date"></div>
 </div>
 <div class="f"><label for="f-msg">Cosa vorresti vedere? (nuovo studio, ristrutturazione, sterilizzazione…)</label><textarea id="f-msg" name="msg" class="field" rows="3" style="resize:vertical"></textarea></div>
+<div class="hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" type="text" tabindex="-1" autocomplete="off"></div>
 <label class="consent" for="f-privacy"><input id="f-privacy" name="privacy" type="checkbox">Acconsento al trattamento dei dati per essere ricontattato da Saratoga in merito alla demo. *</label>
 <p class="err" id="err" role="alert" hidden></p>
 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px">
@@ -330,7 +407,7 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 <div class="led-line" style="width:120px"></div>
 <p class="t" id="thanksTitle"></p>
 <p id="thanksText"></p>
-<p style="font-size:14px;color:#8a96a3">La tua app di posta non si è aperta? <a id="mailLink" href="#">Apri l’email precompilata</a></p>
+<p id="fallbackLine" hidden style="font-size:14px;color:#8a96a3">La tua app di posta non si è aperta? <a id="mailLink" href="#">Apri l’email precompilata</a></p>
 <button type="button" class="btn btn-ghost" id="again" style="align-self:flex-start;min-height:46px;font-size:15px">Invia un’altra richiesta</button>
 </div>
 </div>
@@ -344,8 +421,11 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 </div></footer>
 
 <script>
-const I18N = {"modes": [{"id": "guida", "title": "Guida al kit", "desc": "Serve un kit? Si accende la barra del cassetto giusto e guida l’operatore.", "status": "Kit Endo 07 · Cassetto 2", "aria": "Mobile alō con la banda superiore verde e il segmento bianco accanto al secondo cassetto, che indica il kit richiesto"}, {"id": "accoglienza", "title": "Accoglienza paziente", "desc": "Cromoterapia: le bande orizzontali sfumano lentamente tra tre colori tenui per un ambiente rilassante.", "status": "Cromoterapia attiva", "aria": "Mobile alō con le bande orizzontali che sfumano lentamente tra acqua, lavanda e pesca"}, {"id": "scaduto", "title": "Kit scaduto", "desc": "SmartCabinet360 rileva un kit scaduto: il segmento del suo cassetto si accende di rosso.", "status": "Kit scaduto · Cassetto 3", "aria": "Mobile alō con la banda superiore verde e il segmento rosso accanto al terzo cassetto, che segnala un kit scaduto"}, {"id": "custom", "title": "Any colour. Anytime.", "desc": "Scegli il colore o una bandiera e crea la tua atmosfera con un gesto.", "status": "Atmosfera personalizzata", "aria": "Mobile alō con le bande orizzontali nel colore o nella bandiera scelti"}], "pickColor": "Scegli il colore o la bandiera", "flags": [["it", "Bandiera italiana"], ["fr", "Bandiera francese"], ["es", "Bandiera spagnola"], ["de", "Bandiera tedesca"], ["be", "Bandiera belga"], ["nl", "Bandiera olandese"]], "swatches": [["Viola", "#8b5cff"], ["Azzurro", "#5fd4ff"], ["Verde", "#3be38a"], ["Rosso", "#ff4d5a"], ["Ambra", "#ffb547"], ["Bianco caldo", "#ffe9c7"]], "kinds": [["showroom", "Demo in showroom a Pordenone"], ["studio", "Presentazione ad hoc nel mio studio"], ["online", "Demo online con il team"], ["fiera", "Incontro in fiera"]], "err": {"prefix": "Completa:", "name": "nome e cognome", "email": "un’email valida", "clinic": "studio / clinica", "consent": "il consenso privacy"}, "mail": {"subject": "[alō] Richiesta demo", "intro": "Buongiorno, vorrei prenotare una demo di alō.", "kind": "Tipo", "name": "Nome", "tel": "Telefono", "role": "Ruolo", "clinic": "Studio / Clinica", "city": "Città", "chairs": "Riuniti", "date": "Periodo preferito", "msg": "Messaggio", "source": "Inviato dalla pagina alō"}, "thanks": {"title": "Grazie, {name}.", "text": "Si è aperta la tua app di posta con la richiesta di {kind} già compilata: premi Invia per completarla. Un consulente Saratoga ti contatterà per fissare data e orario."}};
+const I18N = {"modes": [{"id": "guida", "title": "Guida al kit", "desc": "Serve un kit? Si accende la barra del cassetto giusto e guida l’operatore.", "status": "Kit Endo 07 · Cassetto 2", "aria": "Mobile alō con la banda superiore verde e il segmento bianco accanto al secondo cassetto, che indica il kit richiesto"}, {"id": "accoglienza", "title": "Accoglienza paziente", "desc": "Cromoterapia: le bande orizzontali sfumano lentamente tra tre colori tenui per un ambiente rilassante.", "status": "Cromoterapia attiva", "aria": "Mobile alō con le bande orizzontali che sfumano lentamente tra acqua, lavanda e pesca"}, {"id": "scaduto", "title": "Kit scaduto", "desc": "SmartCabinet360 rileva un kit scaduto: il segmento del suo cassetto si accende di rosso.", "status": "Kit scaduto · Cassetto 3", "aria": "Mobile alō con la banda superiore verde e il segmento rosso accanto al terzo cassetto, che segnala un kit scaduto"}, {"id": "custom", "title": "Any colour. Anytime.", "desc": "Scegli il colore o una bandiera e crea la tua atmosfera con un gesto.", "status": "Atmosfera personalizzata", "aria": "Mobile alō con le bande orizzontali nel colore o nella bandiera scelti"}], "pickColor": "Scegli il colore o la bandiera", "flags": [["it", "Bandiera italiana"], ["fr", "Bandiera francese"], ["es", "Bandiera spagnola"], ["de", "Bandiera tedesca"], ["be", "Bandiera belga"], ["nl", "Bandiera olandese"]], "swatches": [["Viola", "#8b5cff"], ["Azzurro", "#5fd4ff"], ["Verde", "#3be38a"], ["Rosso", "#ff4d5a"], ["Ambra", "#ffb547"], ["Bianco caldo", "#ffe9c7"]], "kinds": [["showroom", "Demo in showroom a Pordenone"], ["studio", "Presentazione ad hoc nel mio studio"], ["online", "Demo online con il team"], ["fiera", "Incontro in fiera"]], "err": {"prefix": "Completa:", "name": "nome e cognome", "email": "un’email valida", "clinic": "studio / clinica", "consent": "il consenso privacy"}, "mail": {"subject": "[alō] Richiesta demo", "intro": "Buongiorno, vorrei prenotare una demo di alō.", "kind": "Tipo", "name": "Nome", "tel": "Telefono", "role": "Ruolo", "clinic": "Studio / Clinica", "city": "Città", "chairs": "Riuniti", "date": "Periodo preferito", "msg": "Messaggio", "source": "Inviato dalla pagina alō"}, "thanks": {"title": "Grazie, {name}.", "text": "Abbiamo ricevuto la tua richiesta di {kind}. Un consulente Saratoga ti contatterà per fissare data e orario."}, "ix": {"moves": [["center", "Dal centro verso l’esterno"], ["lr", "Da sinistra a destra"], ["rl", "Da destra a sinistra"], ["pulse", "Pulsazione"], ["breathe", "Respiro"]], "speeds": [["slow", "Lenta"], ["medium", "Media"], ["fast", "Rapida"]], "colors": ["Azzurro", "Verde", "Ambra", "Rosso", "Viola", "Bianco", "Scala Aurora", "Scala Tramonto", "Scala Ghiaccio", "Scala Semaforo", "Scala Neon", "Scala Pastello"], "presets": [{"t": "Paziente in attesa da oltre 10 minuti", "m": "center", "s": "slow", "c": 2}, {"t": "Ciclo autoclave terminato", "m": "lr", "s": "medium", "c": 1}, {"t": "Assistente richiesta in sala 2", "m": "pulse", "s": "fast", "c": 0}, {"t": "Kit mancante per il prossimo paziente", "m": "rl", "s": "fast", "c": 3}], "err_msg": "il messaggio", "th_title": "Grazie, {name}!"}};
 const TO = 'patrizio@saratogadental.it';
+const HOOK_DEMO = 'https://hook.us2.make.com/wgp3xfyhwum8c5tyo7dyhl8pd6dd9q4p';
+const HOOK_IX = 'https://hook.us2.make.com/k28fs3kt4hyfhwsec4wg8mbu6nsn3px4';
+async function sendHook(url,data){try{await fetch(url,{method:'POST',mode:'no-cors',body:new URLSearchParams(data)});return true;}catch(e){return false;}}
 (function(){
   // video autoplay safety
   document.querySelectorAll('video[autoplay]').forEach(v=>{v.muted=true;const p=v.play();if(p&&p.catch)p.catch(()=>{});});
@@ -439,13 +519,87 @@ const TO = 'patrizio@saratogadental.it';
       new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&!played){played=true;play();}});},{threshold:.5}).observe(p);
     } else play();
   })();
-  // ---------- demo form (mailto) ----------
+  // ---------- interactions configurator ----------
+  (function(){
+    const cv=document.getElementById('ixCanvas'); if(!cv) return;
+    const ctx=cv.getContext('2d'); const T=I18N.ix;
+    const COLORS=[['#5fd4ff'],['#3be38a'],['#ffb547'],['#ff4d5a'],['#8b5cff'],['#f4f5f0'],
+      ['#5fd4ff','#8b5cff','#3be38a'],['#ffb547','#ff4d5a','#8b5cff'],['#f4f5f0','#5fd4ff','#2f6ae0'],['#3be38a','#ffd21f','#ff4d5a'],['#ff5ac4','#8b5cff','#5fd4ff'],['#9fe3e6','#c6b8f2','#f6cfae']];
+    const st={move:'center',speed:'slow',color:2,custom:false};
+    const lerp=(a,b,t)=>a+(b-a)*t;
+    const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+    function colAt(arr,x){if(arr.length===1)return hex(arr[0]);const p=x*(arr.length-1),i=Math.min(Math.floor(p),arr.length-2),t=p-i,a=hex(arr[i]),b=hex(arr[i+1]);return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];}
+    const SP={slow:.35,medium:.7,fast:1.3};
+    const N=180;
+    function intensity(i,t){const x=i/(N-1),sp=SP[st.speed];
+      switch(st.move){
+        case 'center':{const d=Math.abs(x-.5)*2,ph=(t*sp)%1.4;return Math.max(.08,1-Math.min(1,Math.abs(d-ph)*4));}
+        case 'lr':{const ph=(t*sp*1.1)%1.3-.15;return Math.max(.08,1-Math.min(1,Math.abs(x-ph)*5));}
+        case 'rl':{const ph=1-((t*sp*1.1)%1.3-.15);return Math.max(.08,1-Math.min(1,Math.abs(x-ph)*5));}
+        case 'pulse':{const v=Math.sin(t*sp*9);return v>0?1:.1;}
+        case 'breathe':{return .25+.75*(.5+.5*Math.sin(t*sp*2.6));}
+      }}
+    function draw(now){
+      const t=now/1000,W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+      const x0=90,x1=W-90,top=70,bot=H-90;
+      ctx.fillStyle='#d9dcdf';ctx.fillRect(x0,top-26,x1-x0,26);
+      ctx.fillStyle='#5a5e63';ctx.fillRect(x0,top+14,x1-x0,bot-top-14);
+      ctx.fillStyle='#3a3d41';ctx.fillRect(x0+50,bot+14,x1-x0-100,40);
+      ctx.fillStyle='#4a4e53';const m1=x0+(x1-x0)/3,m2=x0+2*(x1-x0)/3;ctx.fillRect(m1-2,top+14,4,bot-top-14);ctx.fillRect(m2-2,top+14,4,bot-top-14);
+      for(let k=1;k<4;k++){ctx.fillRect(m1+14,top+14+(bot-top-14)*k/4,m2-m1-28,3);}
+      const arr=COLORS[st.color],seg=(x1-x0)/N;
+      [top,bot].forEach(y=>{
+        ctx.fillStyle='#2b3036';ctx.fillRect(x0,y,x1-x0,14);
+        const gr=ctx.createLinearGradient(x0,0,x1,0);
+        for(let i=0;i<N;i++){const I=intensity(i,t),c=colAt(arr,arr.length>1&&st.move!=='pulse'&&st.move!=='breathe'?i/(N-1):(Math.sin(t*.6)*.5+.5));gr.addColorStop(i/(N-1),'rgba('+c.map(Math.round).join(',')+','+I.toFixed(3)+')');}
+        ctx.fillStyle=gr;ctx.fillRect(x0,y,x1-x0,14);
+        ctx.save();ctx.globalCompositeOperation='lighter';ctx.filter='blur(14px)';ctx.globalAlpha=.9;ctx.fillRect(x0,y-10,x1-x0,34);ctx.filter='blur(5px)';ctx.globalAlpha=.7;ctx.fillRect(x0,y-2,x1-x0,18);ctx.restore();});
+      requestAnimationFrame(draw);}
+    requestAnimationFrame(draw);
+    const lightInput=document.getElementById('ix-light');
+    function label(){const cn=T.colors[st.color];return cn+' · '+T.moves.find(m=>m[0]===st.move)[1].toLowerCase()+' · '+T.speeds.find(s=>s[0]===st.speed)[1].toLowerCase();}
+    function sync(fromPreset){
+      document.getElementById('ixLabel').textContent=label();
+      document.getElementById('ixDot').style.background=COLORS[st.color][0];
+      document.querySelectorAll('#ixMoves .ix-chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===st.move));
+      document.querySelectorAll('#ixSpeeds .ix-chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===st.speed));
+      document.querySelectorAll('#ixColors button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===st.color));
+      if(!fromPreset) document.querySelectorAll('#ixPresets .ix-preset').forEach(b=>b.setAttribute('aria-pressed','false'));
+      if(!st.custom) lightInput.value=label();
+    }
+    lightInput.addEventListener('input',()=>{st.custom=true;});
+    const mk=(host,list,key)=>list.forEach(([v,l])=>{const b=document.createElement('button');b.type='button';b.className='ix-chip';b.dataset.v=v;b.textContent=l;b.addEventListener('click',()=>{st[key]=v;st.custom=false;sync();});document.getElementById(host).appendChild(b);});
+    mk('ixMoves',T.moves,'move');mk('ixSpeeds',T.speeds,'speed');
+    COLORS.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.dataset.v=i;b.setAttribute('aria-label',T.colors[i]);b.title=T.colors[i];b.style.background=c.length>1?'linear-gradient(90deg,'+c.join(',')+')':c[0];b.style.boxShadow='0 0 12px '+c[0];b.addEventListener('click',()=>{st.color=i;st.custom=false;sync();});document.getElementById('ixColors').appendChild(b);});
+    T.presets.forEach(p=>{const b=document.createElement('button');b.type='button';b.className='ix-preset';b.setAttribute('aria-pressed','false');
+      b.innerHTML='<span class="pdot" aria-hidden="true"></span><span></span>';b.querySelector('.pdot').style.background=COLORS[p.c][0];b.querySelector('.pdot').style.boxShadow='0 0 10px '+COLORS[p.c][0];b.lastChild.textContent=p.t;
+      b.addEventListener('click',()=>{st.move=p.m;st.speed=p.s;st.color=p.c;st.custom=false;document.querySelectorAll('#ixPresets .ix-preset').forEach(x=>x.setAttribute('aria-pressed',x===b));document.getElementById('ix-msg').value=p.t;sync(true);});
+      document.getElementById('ixPresets').appendChild(b);});
+    sync();
+    // form
+    const f=document.getElementById('ixForm'),er=document.getElementById('ixErr'),th=document.getElementById('ixThanks');
+    const v=id=>document.getElementById(id).value.trim();
+    f.addEventListener('submit',async e=>{e.preventDefault();const miss=[];
+      if(!v('ix-msg'))miss.push(T.err_msg);if(!v('ix-name'))miss.push(I18N.err.name);
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('ix-email')))miss.push(I18N.err.email);
+      if(!document.getElementById('ix-privacy').checked)miss.push(I18N.err.consent);
+      if(miss.length){er.textContent=I18N.err.prefix+' '+miss.join(', ')+'.';er.hidden=false;return;}
+      er.hidden=true;const btn=document.getElementById('ixSubmit');btn.disabled=true;
+      const data={form:'interactions',message:v('ix-msg'),light:v('ix-light'),move:st.move,speed:st.speed,color:T.colors[st.color],name:v('ix-name'),email:v('ix-email'),role:v('ix-role'),lang:document.documentElement.lang,page:location.href,ts:new Date().toISOString(),website:v('ix-website')};
+      const ok=await sendHook(HOOK_IX,data);
+      btn.disabled=false;
+      if(!ok){const body=Object.entries(data).filter(([k])=>k!=='website').map(([k,x])=>k+': '+x).join('\n');window.location.href='mailto:'+TO+'?subject='+encodeURIComponent('[alō] Interaction — '+data.name)+'&body='+encodeURIComponent(body);}
+      document.getElementById('ixThanksTitle').textContent=T.th_title.replace('{name}',data.name.split(' ')[0]);
+      f.style.display='none';th.classList.add('on');});
+    document.getElementById('ixAgain').addEventListener('click',()=>{f.reset();st.custom=false;sync();f.style.display='';th.classList.remove('on');});
+  })();
+  // ---------- demo form (Make webhook → monday, fallback mailto) ----------
   let kind=I18N.kinds[0][0];
   const kindsEl=document.getElementById('kinds');
   I18N.kinds.forEach(([id,label])=>{const b=document.createElement('button');b.type='button';b.className='kind';b.textContent=label;b.dataset.id=id;b.addEventListener('click',()=>{kind=id;kindsEl.querySelectorAll('.kind').forEach(x=>x.setAttribute('aria-pressed',x.dataset.id===kind));});b.setAttribute('aria-pressed',id===kind);kindsEl.appendChild(b);});
   const form=document.getElementById('demoForm'), err=document.getElementById('err'), thanks=document.getElementById('thanks');
   const val=id=>document.getElementById(id).value.trim();
-  form.addEventListener('submit',e=>{
+  form.addEventListener('submit',async e=>{
     e.preventDefault();
     const miss=[];
     if(!val('f-nome'))miss.push(I18N.err.name);
@@ -459,10 +613,13 @@ const TO = 'patrizio@saratogadental.it';
     const body=[L.intro,'',L.kind+': '+kl,L.name+': '+val('f-nome'),'Email: '+val('f-email'),L.tel+': '+val('f-tel'),L.role+': '+val('f-ruolo'),L.clinic+': '+val('f-studio'),L.city+': '+val('f-citta'),L.chairs+': '+val('f-riuniti'),L.date+': '+val('f-data'),'',L.msg+':',val('f-msg'),'','— '+L.source+' ('+document.documentElement.lang.toUpperCase()+')'].join('\n');
     const href='mailto:'+TO+'?subject='+encodeURIComponent(L.subject+' — '+val('f-studio'))+'&body='+encodeURIComponent(body);
     document.getElementById('mailLink').href=href;
+    const data={form:'demo',kind:kl,name:val('f-nome'),email:val('f-email'),phone:val('f-tel'),role:val('f-ruolo'),clinic:val('f-studio'),city:val('f-citta'),chairs:val('f-riuniti'),preferred:val('f-data'),message:val('f-msg'),lang:document.documentElement.lang,page:location.href,ts:new Date().toISOString(),website:val('f-website')};
+    const ok=await sendHook(HOOK_DEMO,data);
     document.getElementById('thanksTitle').textContent=I18N.thanks.title.replace('{name}',val('f-nome').split(' ')[0]);
     document.getElementById('thanksText').textContent=I18N.thanks.text.replace('{kind}',kl.toLowerCase());
+    document.getElementById('fallbackLine').hidden=ok;
     form.style.display='none';thanks.classList.add('on');
-    window.location.href=href;
+    if(!ok) window.location.href=href;
   });
   document.getElementById('again').addEventListener('click',()=>{form.reset();form.style.display='';thanks.classList.remove('on');});
 })();
