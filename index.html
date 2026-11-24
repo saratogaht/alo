@@ -77,6 +77,8 @@ section.block{padding-top:80px;padding-bottom:80px}
 .cab{position:relative;width:100%;max-width:640px;margin:0 auto;aspect-ratio:640/260}
 .cab div{position:absolute}
 .led{border-radius:3px;transition:background .5s,box-shadow .5s}
+.led-glow{border-radius:3px;filter:blur(8px) saturate(1.25);opacity:0;transform:scaleY(1.6);transition:opacity .5s}
+.led-glow.on{opacity:.85}
 .status{position:absolute;left:24px;bottom:22px;display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);font-size:13px;color:#dfe6ec}
 .modes{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:12px}
 .mode{text-align:left;display:flex;gap:16px;align-items:flex-start;padding:18px 20px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);color:#f4f7fa;font:inherit;cursor:pointer;transition:background .3s,border-color .3s}
@@ -202,11 +204,13 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 <div aria-hidden="true" style="left:35%;width:30.4%;top:31.5%;height:.5%;background:#4a4e53"></div>
 <div aria-hidden="true" style="left:35%;width:30.4%;top:50.25%;height:.5%;background:#4a4e53"></div>
 <div aria-hidden="true" style="left:35%;width:30.4%;top:69%;height:.5%;background:#4a4e53"></div>
+<div class="led-glow" data-glow="t" aria-hidden="true" style="left:0;width:100%;top:8.5%;height:4.5%"></div>
 <div class="led" data-led="t" aria-hidden="true" style="left:0;width:100%;top:8.5%;height:4.5%"></div>
 <div class="led" data-led="d1" aria-hidden="true" style="left:66%;width:1.8%;top:13.4%;height:18%"></div>
 <div class="led" data-led="d2" aria-hidden="true" style="left:66%;width:1.8%;top:32.15%;height:18%"></div>
 <div class="led" data-led="d3" aria-hidden="true" style="left:66%;width:1.8%;top:50.9%;height:18%"></div>
 <div class="led" data-led="d4" aria-hidden="true" style="left:66%;width:1.8%;top:69.65%;height:18%"></div>
+<div class="led-glow" data-glow="b" aria-hidden="true" style="left:0;width:100%;top:88%;height:4.5%"></div>
 <div class="led" data-led="b" aria-hidden="true" style="left:0;width:100%;top:88%;height:4.5%"></div>
 </div>
 <div class="status"><span class="dot" id="sdot"></span><span id="stext"></span></div>
@@ -334,20 +338,25 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 </div></footer>
 
 <script>
-const I18N = {"modes": [{"id": "guida", "title": "Guida al kit", "desc": "Serve un kit? Si accende la barra del cassetto giusto e guida l’operatore.", "status": "Kit Endo 07 · Cassetto 2", "aria": "Mobile alō con la banda superiore verde e il segmento bianco accanto al secondo cassetto, che indica il kit richiesto"}, {"id": "accoglienza", "title": "Accoglienza paziente", "desc": "Cromoterapia: le bande orizzontali sfumano lentamente tra tre colori tenui per un ambiente rilassante.", "status": "Cromoterapia attiva", "aria": "Mobile alō con le bande orizzontali che sfumano lentamente tra acqua, lavanda e pesca"}, {"id": "scaduto", "title": "Kit scaduto", "desc": "SmartCabinet360 rileva un kit scaduto: il segmento del suo cassetto si accende di rosso.", "status": "Kit scaduto · Cassetto 3", "aria": "Mobile alō con la banda superiore verde e il segmento rosso accanto al terzo cassetto, che segnala un kit scaduto"}, {"id": "custom", "title": "Any colour. Anytime.", "desc": "Scegli il colore o una bandiera e crea la tua atmosfera con un gesto.", "status": "Atmosfera personalizzata", "aria": "Mobile alō con le bande orizzontali nel colore o nella bandiera scelti"}], "pickColor": "Scegli il colore o la bandiera", "flags": [["it", "Bandiera italiana"], ["fr", "Bandiera francese"], ["us", "Bandiera USA"]], "swatches": [["Viola", "#8b5cff"], ["Azzurro", "#5fd4ff"], ["Verde", "#3be38a"], ["Rosso", "#ff4d5a"], ["Ambra", "#ffb547"], ["Bianco caldo", "#ffe9c7"]], "kinds": [["showroom", "Demo in showroom a Pordenone"], ["studio", "Presentazione ad hoc nel mio studio"], ["online", "Demo online con il team"], ["fiera", "Incontro in fiera"]], "err": {"prefix": "Completa:", "name": "nome e cognome", "email": "un’email valida", "clinic": "studio / clinica", "consent": "il consenso privacy"}, "mail": {"subject": "[alō] Richiesta demo", "intro": "Buongiorno, vorrei prenotare una demo di alō.", "kind": "Tipo", "name": "Nome", "tel": "Telefono", "role": "Ruolo", "clinic": "Studio / Clinica", "city": "Città", "chairs": "Riuniti", "date": "Periodo preferito", "msg": "Messaggio", "source": "Inviato dalla pagina alō"}, "thanks": {"title": "Grazie, {name}.", "text": "Si è aperta la tua app di posta con la richiesta di {kind} già compilata: premi Invia per completarla. Un consulente Saratoga ti contatterà per fissare data e orario."}};
+const I18N = {"modes": [{"id": "guida", "title": "Guida al kit", "desc": "Serve un kit? Si accende la barra del cassetto giusto e guida l’operatore.", "status": "Kit Endo 07 · Cassetto 2", "aria": "Mobile alō con la banda superiore verde e il segmento bianco accanto al secondo cassetto, che indica il kit richiesto"}, {"id": "accoglienza", "title": "Accoglienza paziente", "desc": "Cromoterapia: le bande orizzontali sfumano lentamente tra tre colori tenui per un ambiente rilassante.", "status": "Cromoterapia attiva", "aria": "Mobile alō con le bande orizzontali che sfumano lentamente tra acqua, lavanda e pesca"}, {"id": "scaduto", "title": "Kit scaduto", "desc": "SmartCabinet360 rileva un kit scaduto: il segmento del suo cassetto si accende di rosso.", "status": "Kit scaduto · Cassetto 3", "aria": "Mobile alō con la banda superiore verde e il segmento rosso accanto al terzo cassetto, che segnala un kit scaduto"}, {"id": "custom", "title": "Any colour. Anytime.", "desc": "Scegli il colore o una bandiera e crea la tua atmosfera con un gesto.", "status": "Atmosfera personalizzata", "aria": "Mobile alō con le bande orizzontali nel colore o nella bandiera scelti"}], "pickColor": "Scegli il colore o la bandiera", "flags": [["it", "Bandiera italiana"], ["fr", "Bandiera francese"], ["es", "Bandiera spagnola"], ["de", "Bandiera tedesca"], ["be", "Bandiera belga"], ["nl", "Bandiera olandese"]], "swatches": [["Viola", "#8b5cff"], ["Azzurro", "#5fd4ff"], ["Verde", "#3be38a"], ["Rosso", "#ff4d5a"], ["Ambra", "#ffb547"], ["Bianco caldo", "#ffe9c7"]], "kinds": [["showroom", "Demo in showroom a Pordenone"], ["studio", "Presentazione ad hoc nel mio studio"], ["online", "Demo online con il team"], ["fiera", "Incontro in fiera"]], "err": {"prefix": "Completa:", "name": "nome e cognome", "email": "un’email valida", "clinic": "studio / clinica", "consent": "il consenso privacy"}, "mail": {"subject": "[alō] Richiesta demo", "intro": "Buongiorno, vorrei prenotare una demo di alō.", "kind": "Tipo", "name": "Nome", "tel": "Telefono", "role": "Ruolo", "clinic": "Studio / Clinica", "city": "Città", "chairs": "Riuniti", "date": "Periodo preferito", "msg": "Messaggio", "source": "Inviato dalla pagina alō"}, "thanks": {"title": "Grazie, {name}.", "text": "Si è aperta la tua app di posta con la richiesta di {kind} già compilata: premi Invia per completarla. Un consulente Saratoga ti contatterà per fissare data e orario."}};
 const TO = 'patrizio@saratogadental.it';
 (function(){
   // video autoplay safety
   document.querySelectorAll('video[autoplay]').forEach(v=>{v.muted=true;const p=v.play();if(p&&p.catch)p.catch(()=>{});});
   // ---------- light lab ----------
   const C={cyan:'#5fd4ff',green:'#3be38a',red:'#ff4d5a',violet:'#8b5cff',calm:'#9fe3e6'}, OFF='#2b3036', W='#ffffff';
-  const FLAGS={
-    it:{t:'linear-gradient(90deg,#009246 0 33.34%,#f4f5f0 33.34% 66.67%,#ce2b37 66.67%)'},
-    fr:{t:'linear-gradient(90deg,#0055a4 0 33.34%,#f4f5f0 33.34% 66.67%,#ef4135 66.67%)'},
-    us:{t:'linear-gradient(90deg,#3c3b6e 0 30%,transparent 30%),repeating-linear-gradient(90deg,#b22234 0 5%,#f4f5f0 5% 10%)',
-        b:'repeating-linear-gradient(90deg,#b22234 0 5%,#f4f5f0 5% 10%)'}
+  const FLAGSRC={
+    it:[['#00a651',1],['#f4f5f0',1],['#ef2b3a',1]],
+    fr:[['#1a6bd6',1],['#f4f5f0',1],['#ff3b47',1]],
+    es:[['#ff2a2a',1],['#ffd21f',2],['#ff2a2a',1]],
+    de:[['#16181b',1],['#ff2020',1],['#ffcc1a',1]],
+    be:[['#16181b',1],['#ffd91f',1],['#ff3644',1]],
+    nl:[['#ff2e3b',1],['#f4f5f0',1],['#2f6ae0',1]]
   };
-  FLAGS.it.b=FLAGS.it.t; FLAGS.fr.b=FLAGS.fr.t;
+  const FLAGS={};
+  Object.keys(FLAGSRC).forEach(k=>{const p=FLAGSRC[k],tot=p.reduce((a,x)=>a+x[1],0);let acc=0;const st=[];
+    p.forEach(([c,w])=>{const s0=(acc/tot*100).toFixed(2),s1=((acc+w)/tot*100).toFixed(2);st.push(c+' '+s0+'% '+s1+'%');acc+=w;});
+    const g='linear-gradient(90deg,'+st.join(',')+')';FLAGS[k]={t:g,b:g};});
   let mode='guida', custom='#8b5cff';
   const leds=[...document.querySelectorAll('[data-led]')];
   const stage=document.getElementById('stage'), cab=document.getElementById('cab');
@@ -363,10 +372,12 @@ const TO = 'patrizio@saratogadental.it';
     if(isFlag(custom)){const f=FLAGS[custom.slice(5)];return {s:Object.assign({t:f.t,b:f.b},dOff),cls:{},glow:'rgba(255,255,255,.12)',acc:'#ffffff'};}
     return {s:Object.assign({t:custom,b:custom},dOff),cls:{},glow:custom+'33',acc:custom};
   }
+  const glows=[...document.querySelectorAll('[data-glow]')];
   function render(){
     const c=cfg();
+    glows.forEach(g=>{const v=c.s[g.dataset.glow];const grad=v.charAt(0)!=='#';g.style.background=grad?v:'none';g.classList.toggle('on',grad);});
     leds.forEach(el=>{const k=el.dataset.led,v=c.s[k];el.style.background=v;
-      el.style.boxShadow=v===OFF?'none':(v.charAt(0)==='#'?'0 0 22px '+v:'0 0 22px rgba(255,255,255,.3)');
+      el.style.boxShadow=v===OFF?'none':(v.charAt(0)==='#'?'0 0 22px '+v:'0 0 6px rgba(255,255,255,.25)');
       el.className='led'+(c.cls[k]?' '+c.cls[k]:'');});
     stage.style.background='radial-gradient(120% 90% at 50% 100%, '+c.glow+' 0%, rgba(5,7,10,0) 60%), #0b0f14';
     document.getElementById('sdot').style.background=c.acc;
