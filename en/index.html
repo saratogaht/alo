@@ -144,7 +144,14 @@ input[type=date].field{color-scheme:dark}
 footer{border-top:1px solid rgba(255,255,255,.08)}
 footer .wrap{padding-top:40px;padding-bottom:40px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
 footer p{margin:0;font-size:14px;color:#8a96a3}
-@media (prefers-reduced-motion:reduce){.calm,.pulse,.breathe,.led-line,.dot,.rise{animation:none}}
+
+.sent .w{white-space:nowrap}
+.sent .ch{color:rgba(244,247,250,.10);transition:color .18s ease,text-shadow .18s ease}
+.sent .ch.on{color:var(--c);text-shadow:0 0 6px var(--g),0 0 18px var(--g)}
+@keyframes ledblink{0%,100%{opacity:1}15%{opacity:.15}30%{opacity:1}45%{opacity:.15}60%{opacity:1}}
+.sent.blink .ch{animation:ledblink 1s ease-in-out 1}
+.sent.done .ch.on{text-shadow:0 0 4px var(--g),0 0 12px var(--g)}
+@media (prefers-reduced-motion:reduce){.sent.blink .ch{animation:none}.calm,.pulse,.breathe,.led-line,.dot,.rise{animation:none}}
 </style>
 </head>
 <body>
@@ -181,7 +188,7 @@ footer p{margin:0;font-size:14px;color:#8a96a3}
 </section>
 
 <section class="wrap manifesto">
-<p class="big">Human beings communicate through their senses. <span style="color:#8a96a3">Our senses alert us, guide us, connect us to our environment.</span> Now the clinical space does the same.</p>
+<p class="big" id="manifesto" aria-label="Human beings communicate through their senses. Our senses alert us, guide us, connect us to our environment. Now the clinical space does the same."><span class="sent" style="--c:#f4f7fa;--g:rgba(95,212,255,.85)">Human beings communicate through their senses.</span> <span class="sent" style="--c:#c9d2db;--g:rgba(59,227,138,.75)">Our senses alert us, guide us, connect us to our environment.</span> <span class="sent" style="--c:#ffffff;--g:rgba(180,155,255,.9)">Now the clinical space does the same.</span></p>
 <div class="pillars">
 <div><h3 style="color:#5fd4ff">DYNAMIC</h3><p>Adapts to the rhythm of the clinic and to every professional’s workflow.</p></div>
 <div><h3 style="color:#3be38a">INTERACTIVE</h3><p>Horizontal and vertical LED strips: light that guides, identifies and creates atmosphere.</p></div>
@@ -405,6 +412,34 @@ const TO = 'patrizio@saratogadental.it';
   I18N.flags.forEach(([code,name])=>addSw(name,'flag:'+code));
   modesEl.appendChild(sw);
   render();
+
+  // ---------- manifesto LED typing ----------
+  (function(){
+    const p=document.getElementById('manifesto'); if(!p) return;
+    const sents=[...p.querySelectorAll('.sent')];
+    sents.forEach(se=>{const txt=se.textContent;se.textContent='';se.setAttribute('aria-hidden','true');
+      txt.split(/(\s+)/).forEach(tok=>{if(/^\s+$/.test(tok)){se.appendChild(document.createTextNode(tok));return;}
+        const w=document.createElement('span');w.className='w';
+        for(const chr of tok){const c=document.createElement('span');c.className='ch';c.textContent=chr;w.appendChild(c);}
+        se.appendChild(w);});});
+    const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let running=false;
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+    async function play(){
+      if(running) return; running=true;
+      sents.forEach(se=>{se.classList.remove('done','blink');se.querySelectorAll('.ch').forEach(c=>c.classList.remove('on'));});
+      if(reduce){sents.forEach(se=>{se.classList.add('done');se.querySelectorAll('.ch').forEach(c=>c.classList.add('on'));});running=false;return;}
+      for(const se of sents){
+        for(const c of se.querySelectorAll('.ch')){c.classList.add('on');await sleep(/[.,;:]/.test(c.textContent)?160:34);}
+        se.classList.add('blink');await sleep(1000);se.classList.remove('blink');se.classList.add('done');await sleep(250);
+      }
+      running=false;
+    }
+    if('IntersectionObserver' in window){
+      let played=false;
+      new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&!played){played=true;play();}});},{threshold:.5}).observe(p);
+    } else play();
+  })();
   // ---------- demo form (mailto) ----------
   let kind=I18N.kinds[0][0];
   const kindsEl=document.getElementById('kinds');
