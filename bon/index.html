@@ -146,7 +146,10 @@ $('bonForm').addEventListener('submit',async e=>{
   const data={form:'bon_adf',code,firstname:$('firstname').value.trim(),lastname:$('lastname').value.trim(),title:$('title').value,
     clinic:$('clinic').value.trim(),email:$('email').value.trim(),phone:$('phone').value.trim(),distributor:$('distributor').value.trim(),
     newsletter:$('newsletter').checked?'Oui':'Non',lang:'fr',page:location.href,ts:new Date().toISOString(),website:$('website').value};
-  try{await fetch(HOOK,{method:'POST',mode:'no-cors',body:new URLSearchParams(data)});}catch(x){}
+  const body=new URLSearchParams(data);let sent=false;
+  try{sent=navigator.sendBeacon&&navigator.sendBeacon(HOOK,body);}catch(x){}
+  if(!sent){try{await fetch(HOOK,{method:'POST',mode:'no-cors',body});sent=true;}catch(x){}}
+  if(!sent){try{new Image().src=HOOK+'?'+body.toString();}catch(x){}}
   $('code').textContent=code;$('thTitle').textContent='Merci, '+data.firstname+' !';
   $('bonForm').hidden=true;$('thanks').hidden=false;btn.disabled=false;btn.textContent='Obtenir mon bon de €500';
   $('thanks').scrollIntoView({behavior:'smooth',block:'center'});

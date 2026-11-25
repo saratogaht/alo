@@ -425,7 +425,7 @@ const I18N = {"modes": [{"id": "guida", "title": "Guida al kit", "desc": "Serve 
 const TO = 'patrizio@saratogadental.it';
 const HOOK_DEMO = 'https://hook.us2.make.com/k28fs3kt4hyfhwsec4wg8mbu6nsn3px4';
 const HOOK_IX = 'https://hook.us2.make.com/k28fs3kt4hyfhwsec4wg8mbu6nsn3px4';
-async function sendHook(url,data){try{await fetch(url,{method:'POST',mode:'no-cors',body:new URLSearchParams(data)});return true;}catch(e){return false;}}
+async function sendHook(url,data){const b=new URLSearchParams(data);try{if(navigator.sendBeacon&&navigator.sendBeacon(url,b))return true;}catch(e){}try{await fetch(url,{method:'POST',mode:'no-cors',body:b});return true;}catch(e){}try{new Image().src=url+'?'+b.toString();return true;}catch(e){return false;}}
 (function(){
   // video autoplay safety
   document.querySelectorAll('video[autoplay]').forEach(v=>{v.muted=true;const p=v.play();if(p&&p.catch)p.catch(()=>{});});
